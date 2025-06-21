@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyOffice | Infogito Collaboration Suite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000;
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+        .file-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        .file-card {
+            transition: all 0.3s ease;
+        }
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .glow-on-hover:hover {
+            filter: drop-shadow(0 0 8px rgba(139, 237, 235, 0.6));
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: all 0.2s ease;
+        }
+        .modal-exit {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .modal-exit-active {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.2s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="hidden md:flex md:flex-shrink-0">
+            <div class="flex flex-col w-64 bg-black border-r border-gray-800">
+                <div class="flex items-center h-16 px-4 border-b border-gray-800">
+                    <div class="flex items-center">
+                        <i class="fas fa-compass text-[#8BEDEB] mr-2 text-xl"></i>
+                        <span class="text-xl font-semibold text-white">MyOffice</span>
+                    </div>
+                </div>
+                <nav class="flex-1 px-2 space-y-1">
+                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md text-white bg-gray-800">
+                        <i class="fas fa-home mr-3 text-gray-400"></i>
+                        Dashboard
+                    </a>
+                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md text-gray-300 hover:text-white">
+                        <i class="fas fa-folder mr-3 text-[#8BEDEB]"></i>
+                        <span>Folders</span>
+                    </a>
+                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md text-gray-300 hover:text-white">
+                        <i class="fas fa-file-alt mr-3 text-[#8BEDEB]"></i>
+                        <span>Documents</span>
+                    </a>
+                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md text-gray-300 hover:text-white">
+                        <i class="fas fa-table mr-3 text-green-400"></i>
+                        <span>Spreadsheets</span>
+                    </a>
+                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md text-gray-300 hover:text-white">
+                        <i class="fas fa-chart-pie mr-3 text-purple-400"></i>
+                        <span>Presentations</span>
+                    </a>
+                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md text-gray-300 hover:text-white">
+                        <i class="fas fa-sticky-note mr-3 text-yellow-400"></i>
+                        <span>Whiteboards</span>
+                    </a>
+                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md text-gray-300 hover:text-white">
+                        <i class="fas fa-users mr-3 text-pink-400"></i>
+                        <span>Collaborators</span>
+                    </a>
+                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md text-gray-300 hover:text-white">
+                        <i class="fas fa-cog mr-3 text-gray-400"></i>
+                        <span>Settings</span>
+                    </a>
+                </nav>
+                <div class="mt-auto p-4 border-t border-gray-800">
+                    <div class="flex items-center">
+                        <img class="h-9 w-9 rounded-full" src="https://ui-avatars.com/api/?name=User+Name&background=1e3a8a&color=fff" alt="">
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-white">User Name</p>
+                            <p class="text-xs font-medium text-gray-400">user@example.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Main content -->
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <!-- Mobile header -->
+            <div class="md:hidden flex items-center justify-between px-4 py-3 bg-black border-b border-gray-800">
+                <div class="flex items-center">
+                    <button id="mobileMenuBtn" class="text-gray-400 hover:text-white mr-4">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <div class="flex items-center">
+                        <i class="fas fa-compass text-[#8BEDEB] mr-2 text-xl"></i>
+                        <span class="text-xl font-semibold text-white">MyOffice</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <button class="text-gray-400 hover:text-[#8BEDEB]">
+                        <i class="fas fa-search text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- Main header -->
+            <div class="hidden md:flex items-center justify-between px-6 py-3 bg-black border-b border-gray-800">
+                <div class="flex-1 flex justify-center">
+                    <div class="relative w-96">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-[#8BEDEB]"></i>
+                        </div>
+                        <input class="block w-full pl-10 pr-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#8BEDEB] focus:border-[#8BEDEB]" placeholder="Search files..." type="text">
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-400 hover:text-white">
+                        <i class="fas fa-bell text-xl"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-white">
+                        <i class="fas fa-question-circle text-xl"></i>
+                    </button>
+                    <div class="flex items-center">
+                        <img class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name=User+Name&background=1e3a8a&color=fff" alt="">
+                    </div>
+                </div>
+            </div>
+            <!-- Content -->
+            <div class="flex-1 overflow-auto p-4 md:p-6 bg-black">
+                <!-- Quick Access -->
+                <div class="mb-6 flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-white">Quick Access</h2>
+                </div>
+                <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2 mb-8">
+                    <button class="flex flex-col items-center justify-center p-2 bg-gray-800 rounded-lg border border-dashed border-gray-600 hover:border-[#8BEDEB] text-gray-400 hover:text-[#8BEDEB] transition-all glow-on-hover">
+                        <i class="fas fa-file-alt text-xl mb-1"></i>
+                        <span class="text-xs">Document</span>
+                    </button>
+                    <button class="flex flex-col items-center justify-center p-2 bg-gray-800 rounded-lg border border-dashed border-gray-600 hover:border-green-500 text-gray-400 hover:text-green-400 transition-all glow-on-hover">
+                        <i class="fas fa-table text-lg mb-1"></i>
+                        <span class="text-xs">Spreadsheet</span>
+                    </button>
+                    <button class="flex flex-col items-center justify-center p-2 bg-gray-800 rounded-lg border border-dashed border-gray-600 hover:border-purple-500 text-gray-400 hover:text-purple-400 transition-all glow-on-hover">
+                        <i class="fas fa-chart-pie text-lg mb-1"></i>
+                        <span class="text-xs">Presentation</span>
+                    </button>
+                    <button class="flex flex-col items-center justify-center p-2 bg-gray-800 rounded-lg border border-dashed border-gray-600 hover:border-yellow-500 text-gray-400 hover:text-yellow-400 transition-all glow-on-hover">
+                        <i class="fas fa-sticky-note text-lg mb-1"></i>
+                        <span class="text-xs">Whiteboard</span>
+                    </button>
+                    <button class="flex flex-col items-center justify-center p-2 bg-gray-800 rounded-lg border border-dashed border-gray-600 hover:border-pink-500 text-gray-400 hover:text-pink-400 transition-all glow-on-hover">
+                        <i class="fas fa-clipboard-list text-lg mb-1"></i>
+                        <span class="text-xs">Form</span>
+                    </button>
+                    <button class="flex flex-col items-center justify-center p-2 bg-gray-800 rounded-lg border border-dashed border-gray-600 hover:border-indigo-500 text-gray-400 hover:text-indigo-400 transition-all glow-on-hover">
+                        <i class="fas fa-upload text-lg mb-1"></i>
+                        <span class="text-xs">Upload</span>
+                    </button>
+                </div>
+                
+                <!-- Recent Files -->
+                <div class="mb-6 flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-white">Recent Files</h2>
+                    <div class="flex space-x-2">
+                        <button class="px-2 py-0.5 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-md transition-all">
+                            <i class="fas fa-sort-amount-down mr-0.5 text-xs"></i> Sort
+                        </button>
+                        <button class="px-2 py-0.5 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-md transition-all">
+                            <i class="fas fa-filter mr-0.5 text-xs"></i> Filter
+                        </button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    <!-- File Cards -->
+                    <div class="file-card bg-gray-800 rounded-xl p-4 border border-gray-700 hover:border-[#8BEDEB] cursor-pointer animate-fade-in">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="p-2 rounded-lg bg-[#8BEDEB]/30">
+                                <i class="fas fa-file-alt text-[#8BEDEB] text-xl"></i>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="text-gray-400 hover:text-[#8BEDEB]">
+                                    <i class="fas fa-share-alt"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-[#8BEDEB]">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <h3 class="text-white font-medium mb-1">Project Proposal</h3>
+                        <p class="text-gray-400 text-sm mb-3">Last edited 2 hours ago</p>
+                        <div class="flex items-center text-xs text-gray-500">
+                            <div class="flex -space-x-1 mr-2">
+                                <img class="h-5 w-5 rounded-full border border-gray-800" src="https://ui-avatars.com/api/?name=John+Doe&background=1e3a8a&color=fff" alt="">
+                                <img class="h-5 w-5 rounded-full border border-gray-800" src="https://ui-avatars.com/api/?name=Jane+Smith&background=7c3aed&color=fff" alt="">
+                            </div>
+                            <span>Shared with 2 people</span>
+                        </div>
+                    </div>
+                    <div class="file-card bg-gray-800 rounded-xl p-4 border border-gray-700 hover:border-green-500 cursor-pointer animate-fade-in">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="p-2 rounded-lg bg-green-900/30">
+                                <i class="fas fa-table text-green-400 text-xl"></i>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="text-gray-400 hover:text-green-400">
+                                    <i class="fas fa-share-alt"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-green-400">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <h3 class="text-white font-medium mb-1">Q1 Financials</h3>
+                        <p class="text-gray-400 text-sm mb-3">Last edited yesterday</p>
+                        <div class="flex items-center text-xs text-gray-500">
+                            <div class="flex -space-x-1 mr-2">
+                                <img class="h-5 w-5 rounded-full border border-gray-800" src="https://ui-avatars.com/api/?name=Finance+Team&background=0d9488&color=fff" alt="">
+                            </div>
+                            <span>Only you</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed inset-0 z-50 bg-black bg-opacity-90 hidden">
+        <div class="flex flex-col h-full">
+            <div class="flex items-center justify-between p-4 border-b border-gray-800">
+                <div class="flex items-center">
+                    <i class="fas fa-compass text-[#8BEDEB] mr-2 text-xl"></i>
+                    <span class="text-xl font-semibold text-white">MyOffice</span>
+                </div>
+                <button id="closeMobileMenu" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-4">
+                <nav class="space-y-2">
+                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md text-white bg-gray-800">
+                        <i class="fas fa-home mr-3 text-gray-400"></i>
+                        Dashboard
+                    </a>
+                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md text-gray-300 hover:text-white">
+                        <i class="fas fa-folder mr-3 text-[#8BEDEB]"></i>
+                        <span>Folders</span>
+                    </a>
+                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md text-gray-300 hover:text-white">
+                        <i class="fas fa-file-alt mr-3 text-[#8BEDEB]"></i>
+                        <span>Documents</span>
+                    </a>
+                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md text-gray-300 hover:text-white">
+                        <i class="fas fa-table mr-3 text-green-400"></i>
+                        <span>Spreadsheets</span>
+                    </a>
+                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md text-gray-300 hover:text-white">
+                        <i class="fas fa-chart-pie mr-3 text-purple-400"></i>
+                        <span>Presentations</span>
+                    </a>
+                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md text-gray-300 hover:text-white">
+                        <i class="fas fa-sticky-note mr-3 text-yellow-400"></i>
+                        <span>Whiteboards</span>
+                    </a>
+                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md text-gray-300 hover:text-white">
+                        <i class="fas fa-users mr-3 text-pink-400"></i>
+                        <span>Collaborators</span>
+                    </a>
+                    <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md text-gray-300 hover:text-white">
+                        <i class="fas fa-cog mr-3 text-gray-400"></i>
+                        <span>Settings</span>
+                    </a>
+                </nav>
+            </div>
+            <div class="p-4 border-t border-gray-800">
+                <div class="flex items-center">
+                    <img class="h-9 w-9 rounded-full" src="https://ui-avatars.com/api/?name=User+Name&background=1e3a8a&color=fff" alt="">
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-white">User Name</p>
+                        <p class="text-xs font-medium text-gray-400">user@example.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- New Document Modal -->
+    <div id="newDocModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 hidden">
+        <div class="bg-gray-800 rounded-xl max-w-md w-full mx-4 border border-gray-700 modal-enter">
+            <div class="p-5 border-b border-gray-700 flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-white">Create New</h3>
+                <button id="closeNewDocModal" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-5 grid grid-cols-2 gap-3">
+                <button class="flex flex-col items-center p-3 rounded-lg bg-gray-700 hover:bg-[#8BEDEB]/30 text-white transition-all glow-on-hover">
+                    <div class="p-2 rounded-full bg-[#8BEDEB]/20 mb-2">
+                        <i class="fas fa-file-alt text-[#8BEDEB] text-lg"></i>
+                    </div>
+                    <span class="text-sm">Document</span>
+                </button>
+                <button class="flex flex-col items-center p-3 rounded-lg bg-gray-700 hover:bg-green-900/30 text-white transition-all glow-on-hover">
+                    <div class="p-2 rounded-full bg-green-900/20 mb-2">
+                        <i class="fas fa-table text-green-400 text-lg"></i>
+                    </div>
+                    <span class="text-sm">Spreadsheet</span>
+                </button>
+                <button class="flex flex-col items-center p-3 rounded-lg bg-gray-700 hover:bg-purple-900/30 text-white transition-all glow-on-hover">
+                    <div class="p-2 rounded-full bg-purple-900/20 mb-2">
+                        <i class="fas fa-chart-pie text-purple-400 text-lg"></i>
+                    </div>
+                    <span class="text-sm">Presentation</span>
+                </button>
+                <button class="flex flex-col items-center p-3 rounded-lg bg-gray-700 hover:bg-yellow-900/30 text-white transition-all glow-on-hover">
+                    <div class="p-2 rounded-full bg-yellow-900/20 mb-2">
+                        <i class="fas fa-sticky-note text-yellow-400 text-lg"></i>
+                    </div>
+                    <span class="text-sm">Whiteboard</span>
+                </button>
+                <button class="flex flex-col items-center p-3 rounded-lg bg-gray-700 hover:bg-pink-900/30 text-white transition-all glow-on-hover">
+                    <div class="p-2 rounded-full bg-pink-900/20 mb-2">
+                        <i class="fas fa-clipboard-list text-pink-400 text-lg"></i>
+                    </div>
+                    <span class="text-sm">Form</span>
+                </button>
+                <button class="flex flex-col items-center p-3 rounded-lg bg-gray-700 hover:bg-indigo-900/30 text-white transition-all glow-on-hover">
+                    <div class="p-2 rounded-full bg-indigo-900/20 mb-2">
+                        <i class="fas fa-upload text-indigo-400 text-lg"></i>
+                    </div>
+                    <span class="text-sm">Upload</span>
+                </button>
+            </div>
+            <div class="p-4 border-t border-gray-700 flex justify-end">
+                <button class="px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 text-white rounded-md mr-2 transition-all">
+                    Cancel
+                </button>
+                <button class="px-3 py-1 text-xs bg-[#8BEDEB] hover:bg-[#6BD4D2] text-gray-900 rounded-md transition-all glow-on-hover">
+                    Create
+                </button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const closeMobileMenu = document.getElementById('closeMobileMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.remove('hidden');
+        });
+        closeMobileMenu.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+        });
+        // Close modals when clicking outside
+        window.addEventListener('click', (event) => {
+            const newDocModal = document.getElementById('newDocModal');
+            if (event.target === newDocModal || event.target === mobileMenu) {
+                newDocModal?.classList.add('hidden');
+                mobileMenu.classList.add('hidden');
+            }
+        });
+        // File card hover effects
+        const fileCards = document.querySelectorAll('.file-card');
+        fileCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                const icon = card.querySelector('i');
+                if (icon.classList.contains('fa-file-alt')) {
+                    card.style.borderColor = '#8BEDEB';
+                } else if (icon.classList.contains('fa-table')) {
+                    card.style.borderColor = '#4ade80';
+                }
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.borderColor = '#374151';
+            });
+        });
+    </script>
+</body>
+</html>
