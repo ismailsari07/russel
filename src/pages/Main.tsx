@@ -7,7 +7,11 @@ const Main: React.FC = () => {
   const [recentFiles, setRecentFiles] = useState<FileType[]>([]);
 
   const handleCreateFile = (file: FileType) => {
-    setRecentFiles(prev => [...prev, file]);    
+    if (file.link) {
+      window.location.href = file.link;
+    }
+    // setRecentFiles(prev => [...prev, file]);    
+    
   }
 
   return (

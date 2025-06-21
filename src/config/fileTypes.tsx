@@ -6,6 +6,7 @@ export type FileType = {
   color: string; // Tailwind color class for hover/border/icon, e.g. 'text-[#8BEDEB]'
   borderColor: string; // Tailwind color class for hover/border/icon, e.g. 'text-[#8BEDEB]'
   icon: string; // FontAwesome icon class, e.g. 'fas fa-file-alt'
+  link: string;
 };
 
 export const FILE_TYPES: FileType[] = [
@@ -15,6 +16,7 @@ export const FILE_TYPES: FileType[] = [
     color: '[#8BEDEB]',
     borderColor: '[#8BEDEB]',
     icon: 'fas fa-file-alt',
+    link: "https://myoffice.infogito.com/doc/"
   },
   {
     type: 'spreadsheet',
@@ -22,6 +24,7 @@ export const FILE_TYPES: FileType[] = [
     color: 'green-400',
     borderColor: 'green-500',
     icon: 'fas fa-table',
+    link: "https://myoffice.infogito.com/sheet/"
   },
   {
     type: 'presentation',
@@ -29,6 +32,7 @@ export const FILE_TYPES: FileType[] = [
     color: 'purple-400',
     borderColor: 'purple-500',
     icon: 'fas fa-chart-pie',
+    link: "https://myoffice.infogito.com/presentation/"
   },
   {
     type: 'whiteboard',
@@ -36,6 +40,7 @@ export const FILE_TYPES: FileType[] = [
     color: 'yellow-400',
     borderColor: 'yellow-500',
     icon: 'fas fa-sticky-note',
+    link: "https://myoffice.infogito.com/pad/"
   },
   {
     type: 'form',
@@ -43,6 +48,7 @@ export const FILE_TYPES: FileType[] = [
     color: 'pink-400',
     borderColor: 'pink-500',
     icon: 'fas fa-clipboard-list',
+    link: "https://myoffice.infogito.com/form/"
   },
   {
     type: 'upload',
@@ -50,5 +56,6 @@ export const FILE_TYPES: FileType[] = [
     color: 'indigo-400',
     borderColor: 'indigo-500',
     icon: 'fas fa-upload',
+    link: "#"
   },
 ];

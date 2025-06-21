@@ -1,9 +1,29 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
 interface DashboardProps {
     mobileMenuOpen: boolean;
     setMobileMenuOpen: () => void;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({mobileMenuOpen, setMobileMenuOpen}: DashboardProps) => {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    if (dropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [dropdownOpen]);
 
   return (
     <>
@@ -17,10 +37,79 @@ const Dashboard: React.FC<DashboardProps> = ({mobileMenuOpen, setMobileMenuOpen}
             </div>
           </div>
           <nav className="flex-1 px-2 space-y-1">
-            <a href="#" className="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md text-white bg-gray-800 hover:bg-white/5">
-              <i className="fas fa-home mr-3 text-gray-400"></i>
-              Dashboard
-            </a>
+            <div className="relative flex items-center group">
+              <a href="#" className="sidebar-item w-full flex items-center px-4 py-3 text-sm font-medium rounded-md text-white bg-gray-800 hover:bg-white/5">
+                <i className="fas fa-home mr-3 text-gray-400"></i>
+                Dashboard
+              </a>
+              <button
+                className="ml-2 px-3 py-2 rounded hover:bg-gray-700 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-[#8BEDEB]"
+                onClick={() => setDropdownOpen((open) => !open)}
+                aria-label="Add New"
+              >
+                <i className="fas fa-plus"></i>
+              </button>
+              <AnimatePresence>
+                {dropdownOpen && (
+                  <motion.div
+                    ref={dropdownRef}
+                    className="absolute left-63 top-0 z-50 mt-2 w-56 bg-gray-800 border border-gray-700 rounded-lg shadow-lg py-2 text-sm"
+                    initial={{ opacity: 0, y: -10, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.98 }}
+                    transition={{ duration: 0.18, ease: 'easeOut' }}
+                  >
+                    <div className="px-3 py-1 text-xs text-gray-400">Create</div>
+                    <a href="#" className="flex items-center px-4 py-2 hover:bg-gray-800 text-gray-200">
+                      <i className="fas fa-folder mr-2 text-gray-400"></i> Folder
+                    </a>
+                    <a href="#" className="flex items-center px-4 py-2 hover:bg-gray-800 text-gray-200">
+                      <i className="fas fa-folder-open mr-2 text-gray-400"></i> Shared folder
+                    </a>
+                    <a href="#" className="flex items-center px-4 py-2 hover:bg-gray-800 text-red-400">
+                      <i className="fas fa-upload mr-2"></i> Upload files
+                    </a>
+                    <a href="#" className="flex items-center px-4 py-2 hover:bg-gray-800 text-red-400">
+                      <i className="fas fa-folder-plus mr-2"></i> Upload folder
+                    </a>
+                    <a href="#" className="flex items-center px-4 py-2 hover:bg-gray-800 text-blue-400">
+                      <i className="fas fa-link mr-2"></i> New Link
+                    </a>
+                    <div className="border-t border-gray-700 my-2"></div>
+                    <a href="#" className="flex items-center px-4 py-2 hover:bg-gray-800 text-green-400">
+                      <i className="fas fa-table mr-2"></i> Sheet
+                    </a>
+                    <a href="#" className="flex items-center px-4 py-2 hover:bg-gray-800 text-[#8BEDEB]">
+                      <i className="fas fa-file-alt mr-2"></i> Document
+                    </a>
+                    <a href="#" className="flex items-center px-4 py-2 hover:bg-gray-800 text-purple-400">
+                      <i className="fas fa-chart-pie mr-2"></i> Presentation
+                    </a>
+                    <a href="#" className="flex items-center px-4 py-2 hover:bg-gray-800 text-blue-400">
+                      <i className="fas fa-file-lines mr-2"></i> Rich text
+                    </a>
+                    <a href="#" className="flex items-center px-4 py-2 hover:bg-gray-800 text-green-500">
+                      <i className="fas fa-columns mr-2"></i> Kanban
+                    </a>
+                    <a href="#" className="flex items-center px-4 py-2 hover:bg-gray-800 text-gray-300">
+                      <i className="fas fa-code mr-2"></i> Code
+                    </a>
+                    <a href="#" className="flex items-center px-4 py-2 hover:bg-gray-800 text-pink-400">
+                      <i className="fas fa-clipboard-list mr-2"></i> Form
+                    </a>
+                    <a href="#" className="flex items-center px-4 py-2 hover:bg-gray-800 text-yellow-400">
+                      <i className="fas fa-sticky-note mr-2"></i> Whiteboard
+                    </a>
+                    <a href="#" className="flex items-center px-4 py-2 hover:bg-gray-800 text-indigo-400">
+                      <i className="fas fa-file-code mr-2"></i> Markdown slides
+                    </a>
+                    <a href="#" className="flex items-center px-4 py-2 hover:bg-gray-800 text-orange-400">
+                      <i className="fas fa-project-diagram mr-2"></i> Diagram
+                    </a>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
             <a href="#" className="sidebar-item flex items-center px-4 py-3 text-sm font-medium rounded-md text-gray-300 hover:text-white hover:bg-white/5">
               <i className="fas fa-folder mr-3 text-[#8BEDEB]"></i>
               <span>Folders</span>
